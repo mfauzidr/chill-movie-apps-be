@@ -1,15 +1,14 @@
 import { Request, Response } from "express";
-import bcrypt from "bcrypt";
-import { IUserResponse } from "../../shared/models/response.model";
-import { findAll, findByUuid, insert, update, deleteUser } from "./users.service";
-import { AppError } from "../../shared/helper/appError";
 import { IUserBody, IUserParams } from "./users.model";
+import * as userServices from "./users.service";
+import { AppError } from "../../shared/helper/appError";
+import { IUserResponse } from "../../shared/models/response.model";
 
 export const getAllUsers = async (
   req: Request,
   res: Response<IUserResponse>,
 ) => {
-  const users = await findAll();
+  const users = await userServices.findAll();
 
   if (users.length < 1) {
     throw new AppError("NOT_DATA", "No Data Found", 404);
@@ -27,10 +26,14 @@ export const getUserByUuid = async (
   res: Response<IUserResponse>,
 ) => {
   const { uuid } = req.params;
-  const user = await findByUuid(uuid);
+  if (!uuid) {
+    throw new AppError("NO_ID", "UUID must be provided", 400);
+  }
 
-  if (!user) {
-    throw new AppError("NOT_DATA", "No Data Found", 404);
+  const user = await userServices.findByUuid(uuid);
+
+  if (user.length === 0) {
+    throw new AppError("NOT_FOUND", "User Not Found", 404);
   }
 
   res.status(200).json({
@@ -40,11 +43,11 @@ export const getUserByUuid = async (
   });
 };
 
-export const insertUser = async (
+export const createUser = async (
   req: Request<{}, {}, IUserBody>,
   res: Response<IUserResponse>,
 ) => {
-  const user = await insert(req.body);
+  const user = await userServices.insert(req.body);
 
   return res.status(201).json({
     success: true,
@@ -52,7 +55,6 @@ export const insertUser = async (
     results: user,
   });
 };
-
 
 export const updateUser = async (
   req: Request<{ uuid: string }, {}, Partial<IUserBody>>,
@@ -64,7 +66,7 @@ export const updateUser = async (
     throw new AppError("NO_ID", "UUID must be provided", 400);
   }
 
-  const user = await update(uuid, req.body);
+  const user = await userServices.update(uuid, req.body);
 
   if (user.length === 0) {
     throw new AppError("NOT_FOUND", "User not found", 404);
@@ -77,20 +79,19 @@ export const updateUser = async (
   });
 };
 
-
 export const deleteUsers = async (
-  req: Request<{uuid: string}>,
-  res: Response<IUserResponse>
-):Promise<Response> => {
-  const {uuid} = req.params
+  req: Request<{ uuid: string }>,
+  res: Response<IUserResponse>,
+): Promise<Response> => {
+  const { uuid } = req.params;
   if (!uuid || uuid === ":uuid") {
     throw new AppError("NO_ID", "UUID must be provided", 400);
   }
 
-  await deleteUser(uuid)
+  await userServices.deleteUser(uuid);
 
   return res.json({
     success: true,
-    message: "User deleted successfully"
+    message: "User deleted successfully",
   });
-}
+};

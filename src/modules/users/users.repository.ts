@@ -45,8 +45,9 @@ export const findByUuid = async (
 
   const [rows] = await db.raw(query, values);
 
-  return rows[0] as Omit<IUser, "password">[];
+  return rows as Omit<IUser, "password">[];
 };
+
 
 export const insert = async (
   data: IUserBody,
@@ -70,6 +71,10 @@ export const insert = async (
 
     columns.push(`\`${key}\``);
     values.push(value);
+  }
+
+  if (columns.length === 0) {
+    throw new Error("No valid fields provided for insert");
   }
 
   const placeholders = values.map(() => "?").join(", ");
@@ -99,14 +104,10 @@ export const insert = async (
 
   const [rows] = await db.raw(selectQuery, [insertId]);
 
-  const users = rows as Omit<IUser, "password">[];
-
-  if (users.length < 1) {
-    throw new Error("Failed to retrieve inserted user");
-  }
-
-  return users;
+  return rows as Omit<IUser, "password">[];
 };
+
+
 
 
 export const update = async (
@@ -167,14 +168,9 @@ export const update = async (
 
   const [rows] = await db.raw(selectQuery, [uuid]);
 
-  const users = rows as Omit<IUser, "password">[];
-
-  if (users.length === 0) {
-    throw new Error("User not found");
-  }
-
-  return users;
+  return rows as Omit<IUser, "password">[];
 };
+
 
 export const deleteUser = async (uuid: string): Promise<number> => {
   const query = `
@@ -188,7 +184,7 @@ export const deleteUser = async (uuid: string): Promise<number> => {
   return affectedRows;
 };
 
-export const findExsistingEmail = async (
+export const findExistingEmail = async (
   email: string,
   excludeUuid?: string,
 ): Promise<Omit<IUser, "password">[]> => {

@@ -1,11 +1,11 @@
 import { Router } from "express"
-import { deleteUsers, getAllUsers, getUserByUuid, insertUser, updateUser } from "./users.handler";
+import { deleteUsers, getAllUsers, getUserByUuid, createUser, updateUser } from "./users.handler";
 
 const usersRouter = Router();
 
 usersRouter.get("/", getAllUsers)
 usersRouter.get("/:uuid", getUserByUuid)
-usersRouter.post("/", insertUser)
+usersRouter.post("/", createUser)
 usersRouter.patch("/:uuid", updateUser)
 usersRouter.delete("/:uuid", deleteUsers)
 
