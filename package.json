@@ -7,7 +7,14 @@
     "dev": "tsx watch api/index.ts",
     "build": "tsc",
     "start": "node ./dist/server.js",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "knex": "knex --knexfile src/shared/config/knexfile.ts",
+    "migrate": "npm run knex -- migrate:latest",
+    "migrate:rollback": "npm run knex -- migrate:rollback",
+    "migrate:list": "npm run knex -- migrate:list",
+    "migrate:make": "npm run knex -- migrate:make",
+    "seed": "npm run knex -- seed:run",
+    "seed:make": "npm run knex -- seed:make"
   },
   "repository": {
     "type": "git",
@@ -37,7 +44,9 @@
     "@types/express": "^5.0.6",
     "@types/morgan": "^1.9.10",
     "@types/node": "^26.6.6",
+    "cross-env": "^10.1.0",
     "pino-pretty": "^13.2.0",
+    "ts-node": "^10.9.2",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2"
   }
