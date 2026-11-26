@@ -11,6 +11,10 @@ export const findById = async (id: number) => {
 };
 
 export const insert = async (data: IGenreBody) => {
+  if (data === null || typeof data !== "object" || Array.isArray(data)) {
+    throw new AppError("INVALID_BODY", "Request body must be a valid object", 400);
+  }
+
   const allowedFields = ["name"];
 
   const invalidFields = Object.keys(data).filter(
@@ -44,6 +48,10 @@ export const insert = async (data: IGenreBody) => {
 };
 
 export const update = async (id: number, data: IGenreBody) => {
+  if (data === null || typeof data !== "object" || Array.isArray(data)) {
+    throw new AppError("INVALID_BODY", "Request body must be a valid object", 400);
+  }
+
   const allowedFields = ["name"];
 
   const invalidFields = Object.keys(data).filter(

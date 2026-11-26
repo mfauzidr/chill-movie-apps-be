@@ -24,6 +24,6 @@
     "declaration": false,
     "skipLibCheck": true
   },
-  "include": ["src/**/*.ts", "server.ts"],
+  "include": ["src/**/*.ts", "tests/**/*.ts", "server.ts"],
   "exclude": ["node_modules", "dist"]
 }
