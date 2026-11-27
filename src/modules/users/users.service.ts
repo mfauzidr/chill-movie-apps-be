@@ -2,6 +2,7 @@ import { AppError } from "../../shared/helper/appError";
 import { IUserBody } from "./users.model";
 import * as usersRepository from "./users.repository";
 import bcrypt from "bcrypt";
+import { codePointLength } from "../../shared/helper/textValidation";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -47,6 +48,10 @@ export const insert = async (data: IUserBody) => {
     );
   }
 
+  if (codePointLength(username.trim()) > 50) {
+    throw new AppError("INVALID_USERNAME", "Username must be at most 50 characters", 400);
+  }
+
   if (typeof email !== "string" || !email.trim()) {
     throw new AppError(
       "INVALID_EMAIL",
@@ -66,6 +71,13 @@ export const insert = async (data: IUserBody) => {
   // 3. Email format validation
   if (!emailRegex.test(email.trim())) {
     throw new AppError("INVALID_EMAIL", "Invalid email format", 400);
+  }
+  if (codePointLength(email.trim()) > 255) {
+    throw new AppError("INVALID_EMAIL", "Invalid email format", 400);
+  }
+
+  if (data.role !== undefined && data.role !== "admin" && data.role !== "user") {
+    throw new AppError("INVALID_ROLE", "Role must be admin or user", 400);
   }
 
   // 4. Duplicate email validation
@@ -128,6 +140,9 @@ export const update = async (uuid: string, data: Partial<IUserBody>) => {
     }
 
     data.username = data.username.trim();
+    if (codePointLength(data.username) > 50) {
+      throw new AppError("INVALID_USERNAME", "Username must be at most 50 characters", 400);
+    }
   }
 
   // 4. Email validation
@@ -141,6 +156,9 @@ export const update = async (uuid: string, data: Partial<IUserBody>) => {
     }
 
     if (!emailRegex.test(data.email.trim())) {
+      throw new AppError("INVALID_EMAIL", "Invalid email format", 400);
+    }
+    if (codePointLength(data.email.trim()) > 255) {
       throw new AppError("INVALID_EMAIL", "Invalid email format", 400);
     }
 
@@ -158,6 +176,10 @@ export const update = async (uuid: string, data: Partial<IUserBody>) => {
     }
 
     data.email = data.email.trim();
+  }
+
+  if (data.role !== undefined && data.role !== "admin" && data.role !== "user") {
+    throw new AppError("INVALID_ROLE", "Role must be admin or user", 400);
   }
 
   // 5. Password validation and hashing

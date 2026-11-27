@@ -1,96 +1,39 @@
 # Chill Movie Apps Backend
 
-## Phase 01 — Project Initialization & Database Connection
+TypeScript backend for the Chill Movie Apps project. It uses Express 5, Knex, MySQL2, and bcrypt.
 
-### 1. Objective
+## Setup
 
-The objective of this phase is to initialize the backend project, configure the development environment, establish a connection to the MySQL database, and implement a basic REST API health check.
+Requirements: Node.js, npm, and a MySQL database.
 
-### 2. Technology Stack
+1. Install dependencies with `npm install`.
+2. Configure the runtime environment with `PORT`, `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, and `DB_NAME`.
+3. Apply the project migrations to the intended development database with `npm run migrate`.
+4. Start the development server with `npm run dev`.
+5. Verify endpoints manually with the provided Postman collection and inspect database changes in MySQL or DBeaver.
 
-| Technology | Purpose |
-|---|---|
-| Node.js | JavaScript runtime |
-| TypeScript | Type-safe development |
-| Express.js | Backend framework |
-| Knex.js | SQL Query Builder |
-| MySQL2 | MySQL database driver |
-| dotenv | Environment variable management |
-| tsx | TypeScript development runtime |
+The server listens on port `8080` by default. `GET /` returns a status response.
 
-### 3. Project Structure
+## HTTP API
 
-The project uses a layered architecture to separate application responsibilities.
+All routes are mounted at the root:
 
-- `config/`: Application and database configuration.
-- `database/`: Database connection and Knex instance.
-- `handlers/`: HTTP request and response handling.
-- `middlewares/`: Express middleware.
-- `repositories/`: Database query operations.
-- `routes/`: API endpoint definitions.
-- `services/`: Business logic.
-- `types/`: TypeScript type definitions.
-- `app.ts`: Express application configuration.
-- `server.ts`: Application entry point and server initialization.
+| Resource | Collection | Item parameter | Methods |
+| --- | --- | --- | --- |
+| Users | `/users` | UUID: `/users/:uuid` | `GET`, `POST`, `PATCH`, `DELETE` |
+| Genres | `/genres` | Numeric ID: `/genres/:id` | `GET`, `POST`, `PATCH`, `DELETE` |
+| Producers | `/producers` | Numeric ID: `/producers/:id` | `GET`, `POST`, `PATCH`, `DELETE` |
+| Casts | `/casts` | Numeric ID: `/casts/:id` | `GET`, `POST`, `PATCH`, `DELETE` |
 
-### 4. Database Configuration
+`GET` on a collection lists records; `GET` on an item retrieves one record. `POST` creates, `PATCH` updates, and `DELETE` removes. Success responses use `{ "success": true, "message": "...", "results"?: [...] }`; `results` is optional and DELETE responses omit it. Error responses use `{ "success": false, "message": "..." }`. User responses omit passwords.
 
-The application uses Knex.js with the MySQL2 driver to establish database connectivity.
+## Project commands
 
-Database configuration is separated into `database.config.ts`, while the Knex instance is initialized centrally in `database/knex.ts`.
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Run the development server |
+| `npm run build` | Compile TypeScript into `dist/` |
+| `npm start` | Run the compiled server |
+| `npm run typecheck` | Check types without emitting output |
 
-Environment variables are used to manage database credentials and connection settings without hardcoding sensitive information.
-
-**Evidence:** `docs/screenshots/phase-01/01-database-configuration.png`
-
-### 5. Server Initialization
-
-The application initializes the database connection before starting the Express HTTP server.
-
-A simple `SELECT 1` query is executed to verify database connectivity.
-
-If the connection succeeds, the Express server starts listening on the configured port. If the connection fails, the application terminates its startup process.
-
-**Evidence:** `docs/screenshots/phase-01/02-server-initialization.png`
-
-### 6. Health Check API
-
-A health check endpoint is implemented to verify that the backend API is running and responding to HTTP requests.
-
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/api/v1/health` | Check API availability |
-
-**Test Result:**
-
-- HTTP Status: `200 OK`
-- Response Status: `success`
-- Message: `Chill Movie Apps API is running`
-
-**Evidence:** `docs/screenshots/phase-01/03-health-check-postman.png`
-
-### 7. TypeScript Validation
-
-The project provides scripts for development, compilation, and type checking.
-
-| Command | Description |
-|---|---|
-| `npm run dev` | Start development server |
-| `npm run build` | Compile TypeScript |
-| `npm start` | Run compiled application |
-| `npm run typecheck` | Validate TypeScript types |
-
-Both TypeScript type checking and compilation completed successfully.
-
-### 8. Phase 01 Result
-
-The initial backend setup has been completed successfully.
-
-- Node.js and Express environment initialized.
-- TypeScript configuration established.
-- Knex.js configured with MySQL2.
-- Database connection verified successfully.
-- Express server running on port 3000.
-- Health check endpoint tested successfully using Postman.
-
-**Phase 01 Status: Completed.**
+Knex CLI scripts are available for migrations and seeds. Database commands change data; configure them only for the intended development database. Endpoint checks use Postman, and database verification can be done in MySQL or DBeaver. This repository does not include an automated test suite.

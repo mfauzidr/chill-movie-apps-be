@@ -1,6 +1,18 @@
 import { AppError } from "../../shared/helper/appError";
 import { IGenreBody } from "./genres.model";
 import * as genresRepository from "./genres.repository";
+import { codePointLength } from "../../shared/helper/textValidation";
+
+const validateName = (name: unknown): string => {
+  if (typeof name !== "string" || !name.trim()) {
+    throw new AppError("INVALID_NAME", "Name must be a non-empty string", 400);
+  }
+  const normalizedName = name.trim();
+  if (codePointLength(normalizedName) > 100) {
+    throw new AppError("INVALID_NAME", "Name must be at most 100 characters", 400);
+  }
+  return normalizedName;
+};
 
 export const findAll = async () => {
   return await genresRepository.findAll();
@@ -29,11 +41,7 @@ export const insert = async (data: IGenreBody) => {
     );
   }
 
-  const { name } = data;
-
-  if (typeof name !== "string" || !name.trim()) {
-    throw new AppError("INVALID_NAME", "Name must be a non-empty string", 400);
-  }
+  const name = validateName(data.name);
 
   const existingGenre = await genresRepository.findExistingGenre(name.trim());
 
@@ -43,7 +51,7 @@ export const insert = async (data: IGenreBody) => {
 
   return await genresRepository.insert({
     ...data,
-    name: name.trim(),
+    name,
   });
 };
 
@@ -66,14 +74,10 @@ export const update = async (id: number, data: IGenreBody) => {
     );
   }
 
-  const { name } = data;
-
-  if (typeof name !== "string" || !name.trim()) {
-    throw new AppError("INVALID_NAME", "Name must be a non-empty string", 400);
-  }
+  const name = validateName(data.name);
 
   const existingGenre = await genresRepository.findExistingGenre(
-    name.trim(),
+    name,
     id,
   );
 
@@ -83,7 +87,7 @@ export const update = async (id: number, data: IGenreBody) => {
 
   return await genresRepository.update(id, {
     ...data,
-    name: name.trim(),
+    name,
   });
 };
 

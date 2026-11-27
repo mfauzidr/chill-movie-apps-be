@@ -1,6 +1,7 @@
 import { AppError } from "../../shared/helper/appError";
 import { IProducerBody } from "./producers.model";
 import * as producersRepository from "./producers.repository";
+import { codePointLength } from "../../shared/helper/textValidation";
 
 export const findAll = async () => {
   return await producersRepository.findAll();
@@ -33,7 +34,12 @@ const validateBody = (data: IProducerBody) => {
     throw new AppError("INVALID_NAME", "Name must be a non-empty string", 400);
   }
 
-  return name.trim();
+  const normalizedName = name.trim();
+  if (codePointLength(normalizedName) > 255) {
+    throw new AppError("INVALID_NAME", "Name must be at most 255 characters", 400);
+  }
+
+  return normalizedName;
 };
 
 export const insert = async (data: IProducerBody) => {

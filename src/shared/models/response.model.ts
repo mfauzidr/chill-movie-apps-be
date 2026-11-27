@@ -1,6 +1,8 @@
 import { IGenre } from "../../modules/genres/genres.model";
 import { IProducer } from "../../modules/producers/producers.model";
 import { IUser } from "../../modules/users/users.model";
+import { ICast } from "../../modules/casts/casts.model";
+import { IContent } from "../../modules/contents/contents.model";
 
 interface IBasicResponse {
   success?: boolean;
@@ -19,6 +21,14 @@ export interface IGenreResponse extends IBasicResponse {
 
 export interface IProducerResponse extends IBasicResponse {
   results?: IProducer[]
+}
+
+export interface ICastResponse extends IBasicResponse {
+  results?: ICast[]
+}
+
+export interface IContentResponse extends IBasicResponse {
+  results?: IContent[]
 }
 
 export interface IErrResponse {

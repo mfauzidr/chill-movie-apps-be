@@ -3,6 +3,7 @@ import { AppError } from "../../shared/helper/appError";
 import { IProducerBody, IProducerParams } from "./producers.model";
 import * as producerServices from "./producers.service";
 import { IProducerResponse } from "../../shared/models/response.model";
+import { parsePositiveIntegerId } from "../../shared/helper/textValidation";
 
 export const getAllProducers = async (
   req: Request,
@@ -24,15 +25,7 @@ export const getProducerById = async (
   req: Request<IProducerParams>,
   res: Response<IProducerResponse>,
 ) => {
-  const rawId = req.params.id;
-  if (!rawId) {
-    throw new AppError("NO_ID", "ID must be provided", 400);
-  }
-
-  const id = Number(rawId);
-  if (!Number.isSafeInteger(id) || id <= 0) {
-    throw new AppError("INVALID_ID", "Invalid producer ID", 400);
-  }
+  const id = parsePositiveIntegerId(req.params.id, "producer");
 
   const producer = await producerServices.findById(id);
   if (producer.length === 0) {
@@ -63,15 +56,7 @@ export const updateProducer = async (
   req: Request<IProducerParams, {}, IProducerBody>,
   res: Response<IProducerResponse>,
 ) => {
-  const rawId = req.params.id;
-  if (!rawId) {
-    throw new AppError("NO_ID", "ID must be provided", 400);
-  }
-
-  const id = Number(rawId);
-  if (!Number.isSafeInteger(id) || id <= 0) {
-    throw new AppError("INVALID_ID", "Invalid producer ID", 400);
-  }
+  const id = parsePositiveIntegerId(req.params.id, "producer");
 
   const producer = await producerServices.update(id, req.body);
   if (producer.length === 0) {
@@ -89,15 +74,7 @@ export const deleteProducer = async (
   req: Request<IProducerParams>,
   res: Response<IProducerResponse>,
 ) => {
-  const rawId = req.params.id;
-  if (!rawId) {
-    throw new AppError("NO_ID", "ID must be provided", 400);
-  }
-
-  const id = Number(rawId);
-  if (!Number.isSafeInteger(id) || id <= 0) {
-    throw new AppError("INVALID_ID", "Invalid producer ID", 400);
-  }
+  const id = parsePositiveIntegerId(req.params.id, "producer");
 
   await producerServices.deleteProducer(id);
 

@@ -1,36 +1,9 @@
-# Implementation Instructions
+# Implementation Guidance
 
-## Scope discipline
+Use the existing route -> handler -> service -> repository flow when it fits the task. Keep SQL in repositories, business rules in services, and HTTP serialization in handlers. A module does not need extra layers just to match a template.
 
-Start by locating the nearest implemented analogue and inspect its model, repository, service, handler, router, schema, and callers. Confirm actual route registration in `src/shared/routes/index.ts` and actual schema in migrations before changing code.
+Use `AppError` for expected client errors and preserve the current success and failure response envelopes. Validate required input and database column limits; add other validation only when the mission or an existing business rule requires it.
 
-Make the smallest coherent change. Do not add authentication, pagination, schema validation libraries, response wrappers, logging systems, or inferred business rules unless the user explicitly requests them.
+Parameterize SQL values and allowlist dynamic column names. Do not return user passwords. Check schema, mounted routes, and the closest existing module before changing those areas.
 
-## Module work
-
-For a new or changed CRUD module, retain the existing five-layer structure:
-
-1. Define TypeScript request/entity/parameter interfaces in `<module>.model.ts`.
-2. Keep SQL access in `<module>.repository.ts`; parameterize values and whitelist any dynamic columns.
-3. Put input validation, trimming/normalization where justified, uniqueness checks, and `AppError` decisions in `<module>.service.ts`.
-4. Keep `<module>.handler.ts` focused on HTTP parameters, status codes, and response serialization.
-5. Register routes in `<module>.router.ts`, then mount them centrally only when route exposure is in scope.
-
-Do not expose user passwords in query results or API responses. Do not invent identifier formats: use the relevant schema and existing module behavior as evidence.
-
-## Errors and responses
-
-Use `AppError(code, message, statusCode)` for anticipated validation, conflict, and not-found cases. Let the global error middleware handle database errors and unexpected failures. Preserve the current public envelope:
-
-```json
-{ "success": true, "message": "...", "results": [] }
-```
-
-For failures, preserve `{ "success": false, "message": "..." }` unless the user approves an API-wide contract change. Do not silently introduce new error-response fields.
-
-## Validation and reporting
-
-After code changes, run `npm.cmd run typecheck`. Also run focused, non-destructive checks that directly cover the change; state any check that could not be run and why. Do not run migrations, seeds, database resets, or production-like commands without explicit approval.
-
-Report the outcome first, then list files changed, validation performed, and any follow-up decision needed from the user.
-
+See [AGENTS.md](AGENTS.md) for scope and safety rules, and [CONTEXT.md](CONTEXT.md) for current project facts.

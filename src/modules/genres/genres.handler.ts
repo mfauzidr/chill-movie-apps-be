@@ -3,6 +3,7 @@ import { IGenreBody, IGenreParams } from "./genres.model";
 import * as genreServices from "./genres.service";
 import { AppError } from "../../shared/helper/appError";
 import { IGenreResponse } from "../../shared/models/response.model";
+import { parsePositiveIntegerId } from "../../shared/helper/textValidation";
 
 export const getAllGenres = async (
   req: Request,
@@ -24,16 +25,7 @@ export const getGenreById = async (
   req: Request<IGenreParams>,
   res: Response<IGenreResponse>,
 ) => {
-  const rawId = req.params.id;
-  if (!rawId) {
-    throw new AppError("NO_ID", "ID must be provided", 400);
-  }
-
-  const id = Number(req.params.id);
-
-  if (!Number.isSafeInteger(id) || id <= 0) {
-    throw new AppError("INVALID_ID", "Invalid genre ID", 400);
-  }
+  const id = parsePositiveIntegerId(req.params.id, "genre");
 
   const genre = await genreServices.findById(id);
   if (genre.length === 0) {
@@ -63,16 +55,7 @@ export const updateGenre = async (
   req: Request<IGenreParams, {}, IGenreBody>,
   res: Response<IGenreResponse>,
 ) => {
-  const rawId = req.params.id;
-  if (!rawId) {
-    throw new AppError("NO_ID", "ID must be provided", 400);
-  }
-
-  const id = Number(req.params.id);
-
-  if (!Number.isSafeInteger(id) || id <= 0) {
-    throw new AppError("INVALID_ID", "Invalid genre ID", 400);
-  }
+  const id = parsePositiveIntegerId(req.params.id, "genre");
 
   const genre = await genreServices.update(id, req.body);
 
@@ -91,16 +74,7 @@ export const deleteGenre = async (
   req: Request<IGenreParams>,
   res: Response<IGenreResponse>,
 ) => {
-  const rawId = req.params.id;
-  if (!rawId) {
-    throw new AppError("NO_ID", "ID must be provided", 400);
-  }
-
-  const id = Number(req.params.id);
-
-  if (!Number.isSafeInteger(id) || id <= 0) {
-    throw new AppError("INVALID_ID", "Invalid genre ID", 400);
-  }
+  const id = parsePositiveIntegerId(req.params.id, "genre");
   await genreServices.deleteGenre(id);
 
   res.status(200).json({
