@@ -3,6 +3,7 @@ import { IProducer } from "../../modules/producers/producers.model";
 import { IUser } from "../../modules/users/users.model";
 import { ICast } from "../../modules/casts/casts.model";
 import { IContent } from "../../modules/contents/contents.model";
+import { IPackage } from "../../modules/packages/packages.model";
 
 interface IBasicResponse {
   success?: boolean;
@@ -29,6 +30,10 @@ export interface ICastResponse extends IBasicResponse {
 
 export interface IContentResponse extends IBasicResponse {
   results?: IContent[]
+}
+
+export interface IPackageResponse extends IBasicResponse {
+  results?: IPackage[]
 }
 
 export interface IErrResponse {
