@@ -4,6 +4,7 @@ import { IUser } from "../../modules/users/users.model";
 import { ICast } from "../../modules/casts/casts.model";
 import { IContent } from "../../modules/contents/contents.model";
 import { IPackage } from "../../modules/packages/packages.model";
+import { IMyList } from "../../modules/my-lists/my-lists.model";
 
 interface IBasicResponse {
   success?: boolean;
@@ -34,6 +35,10 @@ export interface IContentResponse extends IBasicResponse {
 
 export interface IPackageResponse extends IBasicResponse {
   results?: IPackage[]
+}
+
+export interface IMyListResponse extends IBasicResponse {
+  results?: IMyList[]
 }
 
 export interface IErrResponse {

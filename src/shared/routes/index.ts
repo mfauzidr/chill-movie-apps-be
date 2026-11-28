@@ -7,6 +7,7 @@ import producersRouter from "../../modules/producers/producers.router";
 import castsRouter from "../../modules/casts/casts.router";
 import contentsRouter from "../../modules/contents/contents.router";
 import packagesRouter from "../../modules/packages/packages.router";
+import myListsRouter from "../../modules/my-lists/my-lists.router";
 
 const router = Router();
 router.use(requestLogger);
@@ -17,6 +18,7 @@ router.use("/producers", producersRouter)
 router.use("/casts", castsRouter)
 router.use("/contents", contentsRouter)
 router.use("/packages", packagesRouter)
+router.use("/users/:userUuid/my-lists", myListsRouter)
 
 router.use(globalErrorHandler);
 
