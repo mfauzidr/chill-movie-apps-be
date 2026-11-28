@@ -44,43 +44,43 @@ const mapRows = (rows: MyListRow[]): IMyList[] =>
     },
   }));
 
-export const findByUserUuid = async (userUuid: string): Promise<IMyList[]> => {
+export const findByUserUuid = async (user_uuid: string): Promise<IMyList[]> => {
   const [rows] = await db.raw(
     `${myListSelect} WHERE ml.user_uuid = ? ORDER BY ml.id`,
-    [userUuid],
+    [user_uuid],
   );
   return mapRows(rows as MyListRow[]);
 };
 
 export const findByUserAndContentUuid = async (
-  userUuid: string,
-  contentUuid: string,
+  user_uuid: string,
+  content_uuid: string,
 ): Promise<IMyList[]> => {
   const [rows] = await db.raw(
     `${myListSelect} WHERE ml.user_uuid = ? AND ml.content_uuid = ?`,
-    [userUuid, contentUuid],
+    [user_uuid, content_uuid],
   );
   return mapRows(rows as MyListRow[]);
 };
 
 export const insert = async (
-  userUuid: string,
-  contentUuid: string,
+  user_uuid: string,
+  content_uuid: string,
 ): Promise<IMyList[]> => {
   await db.raw(
     "INSERT INTO my_lists (user_uuid, content_uuid) VALUES (?, ?)",
-    [userUuid, contentUuid],
+    [user_uuid, content_uuid],
   );
-  return findByUserAndContentUuid(userUuid, contentUuid);
+  return findByUserAndContentUuid(user_uuid, content_uuid);
 };
 
 export const deleteByUserAndContentUuid = async (
-  userUuid: string,
-  contentUuid: string,
+  user_uuid: string,
+  content_uuid: string,
 ): Promise<number> => {
   const [result] = await db.raw(
     "DELETE FROM my_lists WHERE user_uuid = ? AND content_uuid = ?",
-    [userUuid, contentUuid],
+    [user_uuid, content_uuid],
   );
   const { affectedRows } = result as ResultSetHeader;
   return affectedRows;

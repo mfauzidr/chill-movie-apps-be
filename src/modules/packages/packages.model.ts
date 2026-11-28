@@ -10,7 +10,7 @@ export type IPackageUpdateBody = Partial<IPackageBody>;
 export interface IPackage extends Omit<IPackageBody, "price"> {
   id: number;
   uuid: string;
-  price: string;
+  price: number;
   is_active: boolean;
   created_at: Date;
   updated_at: Date | null;

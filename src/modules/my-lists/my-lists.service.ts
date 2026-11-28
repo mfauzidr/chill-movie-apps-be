@@ -13,11 +13,11 @@ const validateUuid = (value: unknown, field: string): string => {
   return value.trim();
 };
 
-export const findByUserUuid = async (userUuid: string) =>
-  myListsRepository.findByUserUuid(validateUuid(userUuid, "user_uuid"));
+export const findByUserUuid = async (user_uuid: string) =>
+  myListsRepository.findByUserUuid(validateUuid(user_uuid, "user_uuid"));
 
 export const insert = async (
-  userUuid: string,
+  user_uuid: string,
   body: IMyListCreateBody,
 ) => {
   if (body === null || typeof body !== "object" || Array.isArray(body)) {
@@ -36,18 +36,18 @@ export const insert = async (
   }
 
   return myListsRepository.insert(
-    validateUuid(userUuid, "user_uuid"),
+    validateUuid(user_uuid, "user_uuid"),
     validateUuid(body.content_uuid, "content_uuid"),
   );
 };
 
 export const deleteByUserAndContentUuid = async (
-  userUuid: string,
-  contentUuid: string | undefined,
+  user_uuid: string,
+  content_uuid: string | undefined,
 ) => {
   const affectedRows = await myListsRepository.deleteByUserAndContentUuid(
-    validateUuid(userUuid, "user_uuid"),
-    validateUuid(contentUuid, "content_uuid"),
+    validateUuid(user_uuid, "user_uuid"),
+    validateUuid(content_uuid, "content_uuid"),
   );
 
   if (affectedRows === 0) {

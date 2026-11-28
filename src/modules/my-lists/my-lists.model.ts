@@ -1,6 +1,6 @@
 export interface IMyListParams {
-  userUuid: string;
-  contentUuid?: string;
+  user_uuid: string;
+  content_uuid?: string;
 }
 
 export interface IMyListCreateBody {

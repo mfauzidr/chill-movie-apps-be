@@ -9,6 +9,6 @@ const myListsRouter = Router({ mergeParams: true });
 
 myListsRouter.get("/", getMyList);
 myListsRouter.post("/", addContentToMyList);
-myListsRouter.delete("/:contentUuid", removeContentFromMyList);
+myListsRouter.delete("/:content_uuid", removeContentFromMyList);
 
 export default myListsRouter;

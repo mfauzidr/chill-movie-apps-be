@@ -5,6 +5,9 @@ import { ICast } from "../../modules/casts/casts.model";
 import { IContent } from "../../modules/contents/contents.model";
 import { IPackage } from "../../modules/packages/packages.model";
 import { IMyList } from "../../modules/my-lists/my-lists.model";
+import { IUserPackage } from "../../modules/user-packages/user-packages.model";
+import { IOrder } from "../../modules/orders/orders.model";
+import { IPayment } from "../../modules/payments/payments.model";
 
 interface IBasicResponse {
   success?: boolean;
@@ -39,6 +42,18 @@ export interface IPackageResponse extends IBasicResponse {
 
 export interface IMyListResponse extends IBasicResponse {
   results?: IMyList[]
+}
+
+export interface IUserPackageResponse extends IBasicResponse {
+  results?: IUserPackage[]
+}
+
+export interface IOrderResponse extends IBasicResponse {
+  results?: IOrder[]
+}
+
+export interface IPaymentResponse extends IBasicResponse {
+  results?: IPayment[]
 }
 
 export interface IErrResponse {

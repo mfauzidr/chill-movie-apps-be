@@ -8,7 +8,7 @@ export const getMyList = async (
   req: Request<IMyListParams>,
   res: Response<IMyListResponse>,
 ) => {
-  const myList = await myListsService.findByUserUuid(req.params.userUuid);
+  const myList = await myListsService.findByUserUuid(req.params.user_uuid);
 
   res.status(200).json({
     success: true,
@@ -17,31 +17,12 @@ export const getMyList = async (
   });
 };
 
-export const getMyListEntry = async (
-  req: Request<IMyListParams>,
-  res: Response<IMyListResponse>,
-) => {
-  const entry = await myListsService.findByUserAndContentUuid(
-    req.params.userUuid,
-    req.params.contentUuid,
-  );
-  if (entry.length === 0) {
-    throw new AppError("NOT_FOUND", "MyList Entry Not Found", 404);
-  }
-
-  res.status(200).json({
-    success: true,
-    message: "MyList Entry Retrieved Successfully.",
-    results: entry,
-  });
-};
-
 export const addContentToMyList = async (
   req: Request<IMyListParams, {}, IMyListCreateBody>,
   res: Response<IMyListResponse>,
 ) => {
   const entry = await myListsService.insert(
-    req.params.userUuid,
+    req.params.user_uuid,
     req.body,
   );
 
@@ -57,8 +38,8 @@ export const removeContentFromMyList = async (
   res: Response<IMyListResponse>,
 ) => {
   await myListsService.deleteByUserAndContentUuid(
-    req.params.userUuid,
-    req.params.contentUuid,
+    req.params.user_uuid,
+    req.params.content_uuid,
   );
 
   res.status(200).json({
